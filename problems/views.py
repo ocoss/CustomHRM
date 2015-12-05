@@ -32,10 +32,38 @@ class ProblemView(generic.TemplateView):
         context = self.get_context_data(**kwargs)
         code_form = CodeForm(request.POST)
         if code_form.is_valid():
-            context['user_name'] = code_form.cleaned_data['user_name']
+            user_name = code_form.cleaned_data['user_name']
+            size = code_form.cleaned_data['size']
+            speed = code_form.cleaned_data['speed']
+            context['user_name'] = user_name
             context['code'] = code_form.cleaned_data['code']
-            context['size'] = code_form.cleaned_data['size']
-            context['speed'] = code_form.cleaned_data['speed']
+            context['size'] = size
+            context['speed'] = speed
+
+            # check if it is a high score
+            high_score = True
+            for score in context['scores']:
+                if score.size <= size and score.speed <= speed:
+                    high_score = False
+                    break
+
+            if high_score:
+                # remove any defunct scores
+                for score in context['scores']:
+                    if score.size >= size and score.speed >= speed:
+                        score.delete()
+
+                # create the new high score
+                new_score = Score(problem=context['problem'],
+                                  user=user_name,
+                                  size=size,
+                                  speed=speed)
+                new_score.save()
+
+                # reset the list of high scores
+                context['scores'] = context['problem'].score_set.all()
+
+            context['high_score'] = high_score
 
             return render(request, 'problems/solution.html', context)
         else:
