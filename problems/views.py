@@ -1,6 +1,7 @@
 from django.views import generic
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 
 from problems.models import Problem, Test, Score
 from problems.forms import CodeForm
@@ -28,13 +29,14 @@ class ProblemView(generic.TemplateView):
         return context
 
     def post(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
         code_form = CodeForm(request.POST)
+        context = self.get_context_data(**kwargs)
         if code_form.is_valid():
             user_name = self.request.POST.get('user_name')
             code = self.request.POST.get('code')
 
-            return HttpResponseRedirect('solution/{}/'.format(self.kwargs['name_slug']))
+            return HttpResponseRedirect(reverse('solution', \
+                    args=(self.kwargs['name_slug'],)))
         else:
             context['form'] = code_form
             return render(request, self.template_name, context)
