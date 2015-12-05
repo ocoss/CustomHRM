@@ -25,30 +25,19 @@ class ProblemView(generic.TemplateView):
         problem = get_object_or_404(Problem, name_slug=name_slug)
         context['problem'] = problem
         context['scores'] = problem.score_set.all()
-        context['form'] = CodeForm({'problem':problem.name_slug,})
+        context['form'] = CodeForm({'problem_slug':name_slug,})
         return context
 
     def post(self, request, *args, **kwargs):
-        code_form = CodeForm(request.POST)
         context = self.get_context_data(**kwargs)
+        code_form = CodeForm(request.POST)
         if code_form.is_valid():
-            user_name = code_form.cleaned_data['user_name']
-            #TODO: create score and add it if it is a high score
+            context['user_name'] = code_form.cleaned_data['user_name']
+            context['code'] = code_form.cleaned_data['code']
+            context['size'] = code_form.cleaned_data['size']
+            context['speed'] = code_form.cleaned_data['speed']
 
-            return HttpResponseRedirect(reverse('solution', \
-                    args=(self.kwargs['name_slug'],)))
+            return render(request, 'problems/solution.html', context)
         else:
             context['form'] = code_form
             return render(request, self.template_name, context)
-
-
-class SolutionView(generic.TemplateView):
-    template_name = 'problems/solution.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(SolutionView, self).get_context_data(**kwargs)
-        name_slug = self.kwargs['name_slug']
-        problem = get_object_or_404(Problem, name_slug=name_slug)
-        context['problem'] = problem
-        context['scores'] = problem.score_set.all()
-        return context

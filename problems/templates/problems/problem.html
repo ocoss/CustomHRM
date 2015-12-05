@@ -7,11 +7,15 @@
     <h3>{{ problem.difficult }}</h3>
     <div>
         <h4>High Scores:</h4>
+        {% if scores %}
         <ul>
             {% for score in scores %}
             <p>{{ score }}</p>
             {% endfor %}
         </ul>
+        {% else %}
+        <p>None</p>
+        {% endif %}
     </div>
     <div>
         <h4>Description:</h4>
