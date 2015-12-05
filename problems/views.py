@@ -25,7 +25,7 @@ class ProblemView(generic.TemplateView):
         problem = get_object_or_404(Problem, name_slug=name_slug)
         context['problem'] = problem
         context['scores'] = problem.score_set.all()
-        context['form'] = CodeForm()
+        context['form'] = CodeForm({'problem':problem.name_slug,})
         return context
 
     def post(self, request, *args, **kwargs):

@@ -39,3 +39,6 @@ class Score(models.Model):
 
     def __str__(self):
         return "{}: {}/{}".format(self.user, self.size, self.speed)
+
+    class Meta:
+        ordering = ['problem', 'size']
