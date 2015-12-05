@@ -58,3 +58,10 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#Sublime
+*.sublime-project
+*.sublime-workspace
+
+#Sqlite3 db
+*.sqlite3
