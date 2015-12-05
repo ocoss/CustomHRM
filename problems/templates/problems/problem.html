@@ -1,0 +1,29 @@
+<html lang="en">
+<head>
+</head>
+<body>
+    <p><a href="/">home</a></p>
+    <h1>{{ problem }}</h1>
+    <h3>{{ problem.difficult }}</h3>
+    <div>
+        <h4>High Scores:</h4>
+        <ul>
+            {% for score in scores %}
+            <p>{{ score }}</p>
+            {% endfor %}
+        </ul>
+    </div>
+    <div>
+        <h4>Description:</h4>
+        <p>{{ problem.description }}</p>
+        <p>Initial Memory: {{ problem.init_memory }}</p>
+    </div>
+    <div>
+        <h4>Code Input:</h4>
+        <form action="{% url 'solution' problem.name_slug %}" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <Input type="submit" value="Run Code"/>
+        </form>
+    </div>
+</body>

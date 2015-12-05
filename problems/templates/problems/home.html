@@ -1,0 +1,15 @@
+<html lang="en">
+<head>
+</head>
+<body>
+    <h1>Home page</h1>
+
+    <h3>Problems:</h3>
+    <div>
+        <ul>
+            {% for prob in problems %}
+            <p><a href="{% url 'problem' prob.name_slug %}">{{ prob }}</a>: {{ prob.difficulty }}</p>
+            {% endfor %}
+        </ul>
+    </div> 
+</body>
