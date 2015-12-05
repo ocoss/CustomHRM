@@ -32,8 +32,8 @@ class ProblemView(generic.TemplateView):
         code_form = CodeForm(request.POST)
         context = self.get_context_data(**kwargs)
         if code_form.is_valid():
-            user_name = self.request.POST.get('user_name')
-            code = self.request.POST.get('code')
+            user_name = code_form.cleaned_data['user_name']
+            #TODO: create score and add it if it is a high score
 
             return HttpResponseRedirect(reverse('solution', \
                     args=(self.kwargs['name_slug'],)))

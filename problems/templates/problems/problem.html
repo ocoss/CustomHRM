@@ -20,9 +20,11 @@
     </div>
     <div>
         <h4>Code Input:</h4>
-        <form action="{% url 'solution' problem.name_slug %}" method="post">
+        <form action="{% url 'problem' problem.name_slug %}" method="post">
             {% csrf_token %}
-            {{ form }}
+            <ul>
+                {{ form.as_ul }}
+            </ul>
             <Input type="submit" value="Run Code"/>
         </form>
     </div>
