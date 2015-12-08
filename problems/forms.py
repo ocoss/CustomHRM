@@ -42,7 +42,7 @@ class CodeForm(forms.Form):
                 elif LBL_PTRN.match(line[0]):
                     lbl = line[0][:-1]
                     if lbl in LABELS.keys():
-                        raise forms.ValidationError("Failed to parse code: Invalid jump label.")
+                        raise forms.ValidationError("Failed to parse code: Invalid jump label: {}".format(lbl))
                     LABELS[lbl] = len(PARSED_CODE)
                 elif line[0] == 'DEFINE':
                     break
@@ -78,38 +78,38 @@ class CodeForm(forms.Form):
 
                     elif line[0] == 'OUTBOX':
                         if hands == '*':
-                            raise forms.ValidationError("Code Crashed: Cannot outbox nothing. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Cannot outbox nothing. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         outbox.append(str(hands))
                         hands = '*'
 
                     elif line[0] == 'JUMP':
                         if line[1] not in LABELS.keys():
-                            raise forms.ValidationError("Code Crashed: Invalid jump label. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Invalid jump label. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         code_pointer = LABELS[line[1]]
                         continue
 
                     elif line[0] == 'JUMPZ':
                         if line[1] not in LABELS.keys():
-                            raise forms.ValidationError("Code Crashed: Invalid jump label. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Invalid jump label. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         if hands == 0:
                             code_pointer = LABELS[line[1]]
                             continue
 
                     elif line[0] == 'JUMPN':
                         if line[1] not in LABELS.keys():
-                            raise forms.ValidationError("Code Crashed: Invalid jump label. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Invalid jump label. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         if hands < 0:
                             code_pointer = LABELS[line[1]]
                             continue
 
                     elif line[0] == 'COPYTO':
                         if hands == '*':
-                            raise forms.ValidationError("Code Crashed: Cannot copy nothing. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Cannot copy nothing. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         if line[1][0] == '[':
                             i = int(line[1][1:-1])
                             j = memory[i]
                             if j in LETTERS or j >= len(memory) or j < 0:
-                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {}".format(test.inbox))
+                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         else:
                             j = int(line[1])
                         memory[j] = hands
@@ -119,7 +119,7 @@ class CodeForm(forms.Form):
                             i = int(line[1][1:-1])
                             j = memory[i]
                             if j in LETTERS or j >= len(memory) or j < 0:
-                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {}".format(test.inbox))
+                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         else:
                             j = int(line[1])
                         if memory[j] == '*':
@@ -131,12 +131,12 @@ class CodeForm(forms.Form):
                             i = int(line[1][1:-1])
                             j = memory[i]
                             if j in LETTERS or j >= len(memory) or j < 0:
-                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {}".format(test.inbox))
+                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         else:
                             j = int(line[1])
                         memory[j] += 1
                         if memory[j] > 999:
-                            raise forms.ValidationError("Code Crashed: Value too large. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Value too large. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         hands = memory[j]
 
                     elif line[0] == 'BUMPDN':
@@ -144,12 +144,12 @@ class CodeForm(forms.Form):
                             i = int(line[1][1:-1])
                             j = memory[i]
                             if j in LETTERS or j >= len(memory) or j < 0:
-                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {}".format(test.inbox))
+                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         else:
                             j = int(line[1])
                         memory[j] -= 1
                         if memory[j] < -999:
-                            raise forms.ValidationError("Code Crashed: Value too small. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Value too small. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         hands = memory[j]
 
                     elif line[0] == 'ADD':
@@ -157,45 +157,45 @@ class CodeForm(forms.Form):
                             i = int(line[1][1:-1])
                             j = memory[i]
                             if j in LETTERS or j >= len(memory) or j < 0:
-                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {}".format(test.inbox))
+                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         else:
                             j = int(line[1])
                         if hands == '*' or memory[j] == '*':
-                            raise forms.ValidationError("Code Crashed: Cannot add with empty value. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Cannot add with empty value. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         if hands in LETTERS or memory[j] in LETTERS:
-                            raise forms.ValidationError("Code Crashed: Cannot add with letters. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Cannot add with letters. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         hands += memory[j]
                         if hands < -999:
-                            raise forms.ValidationError("Code Crashed: Value too small. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Value too small. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         if hands > 999:
-                            raise forms.ValidationError("Code Crashed: Value too large. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Value too large. INBOX: {} MEMORY: {}".format(test.inbox,memory))
 
                     elif line[0] == 'SUB':
                         if line[1][0] == '[':
                             i = int(line[1][1:-1])
                             j = memory[i]
                             if j in LETTERS or j >= len(memory) or j < 0:
-                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {}".format(test.inbox))
+                                raise forms.ValidationError("Code Crashed: Invalid indirect memory reference. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         else:
                             j = int(line[1])
                         if hands == '*' or memory[j] == '*':
-                            raise forms.ValidationError("Code Crashed: Cannot add with empty value. INBOX: {}".format(test.inbox)) 
+                            raise forms.ValidationError("Code Crashed: Cannot add with empty value. INBOX: {} MEMORY: {}".format(test.inbox,memory)) 
                         elif hands in LETTERS and memory[j] in LETTERS:
                             hands = LETTERS.index(hands) - LETTERS.index(memory[j])
                         elif hands in LETTERS or memory[j] in LETTERS:
-                            raise forms.ValidationError("Code Crashed: Cannot subtract with mixed types. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Cannot subtract with mixed types. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         else:
                             hands -= memory[j]
                         if hands < -999:
-                            raise forms.ValidationError("Code Crashed: Value too small. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Value too small. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         if hands > 999:
-                            raise forms.ValidationError("Code Crashed: Value too large. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Value too large. INBOX: {} MEMORY: {}".format(test.inbox,memory))
 
                     code_pointer += 1
             except forms.ValidationError as e:
                 raise e
             except:
-                raise forms.ValidationError("Code Crashed. INBOX: {}".format(test.inbox))
+                raise forms.ValidationError("Code Crashed. INBOX: {} MEMORY: {}".format(test.inbox,memory))
 
             # check for too slow solutions
             if steps > 5000:
@@ -205,7 +205,7 @@ class CodeForm(forms.Form):
             if outbox == test.outbox.split():
                 total_steps += steps
                 continue
-            raise forms.ValidationError("Solution produced wrong output. INBOX: {}".format(test.inbox))
+            raise forms.ValidationError("Solution produced wrong output. INBOX: {} OUTBOX: {}".format(test.inbox,outbox))
 
         # code has passed all cases
         self.cleaned_data['speed'] = int(total_steps/len(tests))
