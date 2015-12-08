@@ -56,7 +56,7 @@ class CodeForm(forms.Form):
         for test in tests:
             inbox = test.inbox.split()
             outbox = []
-            memory = INIT_MEMORY
+            memory = INIT_MEMORY[:]
             hands = '*'
             code_pointer = 0
             steps = 0
