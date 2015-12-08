@@ -1,12 +1,31 @@
 <html lang="en">
 <head>
+<style type="text/css">
+    body {
+        background-color: #EFDFCE;
+    }
+    h1 {
+        font-size:50px;
+        margin: auto;
+        width:50%;
+    }
+    h2 {
+        font-size: 30px;
+        margin: auto;
+        width: 50%;
+    }
+    p {
+        font-size:16px;
+        font-family:"Arial";
+    }
+</style>
 </head>
 <body>
     <p><a href="/">home</a></p>
     <h1>{{ problem }} Solution</h1>
-    <h3>{{ problem.difficult }}</h3>
+    <h2>{{ problem.difficulty }}</h2>
     <div>
-        <h4>High Scores:</h4>
+        <h3>High Score(s): (size/speed)</h3>
         <ul>
             {% for score in scores %}
             <p>{{ score }}</p>
@@ -14,10 +33,12 @@
         </ul>
     </div>
     <h3>Your score:</h3>
+    <p style="padding-left:20px;">{{ size }}/{{ speed }}</p>
     {% if high_score %}
     <h4>Congratulations! High Score!</h4>
     {% endif %}
-    <p>{{ size }}/{{ speed }}</p>
     <h3>Your code:</h3>
-    <textarea cols="40" rows="25">{{ code }}</textarea>
+    <div style="padding-left:20px;">
+        <textarea cols="40" rows="25">{{ code }}</textarea>
+    </div>
 </body>

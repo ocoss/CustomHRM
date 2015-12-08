@@ -1,12 +1,31 @@
 <html lang="en">
 <head>
+<style type="text/css">
+    body {
+        background-color: #EFDFCE;
+    }
+    h1 {
+        font-size:50px;
+        margin: auto;
+        width:50%;
+    }
+    h2 {
+        font-size: 30px;
+        margin: auto;
+        width: 50%;
+    }
+    p {
+        font-size:16px;
+        font-family:"Arial";
+    }
+</style>
 </head>
 <body>
     <p><a href="/">home</a></p>
     <h1>{{ problem }}</h1>
-    <h3>{{ problem.difficult }}</h3>
+    <h2>{{ problem.difficulty }}</h2>
     <div>
-        <h4>High Scores:</h4>
+        <h3>High Score(s): (size/speed)</h3>
         {% if scores %}
         <ul>
             {% for score in scores %}
@@ -17,13 +36,15 @@
         <p>None</p>
         {% endif %}
     </div>
-    <div>
-        <h4>Description:</h4>
+    <h3>Description:</h3>
+    <div style="padding-left:20px;">
+        {% autoescape off %}
         <p>{{ problem.description }}</p>
-        <p>Initial Memory: {{ problem.init_memory }}</p>
+        {% endautoescape %}
+        <h4>Initial Memory: {{ problem.init_memory }}</h4>
     </div>
     <div>
-        <h4>Code Input:</h4>
+        <h3>Code Input:</h3>
         <form action="{% url 'problem' problem.name_slug %}" method="post">
             {% csrf_token %}
             <ul>
@@ -32,4 +53,5 @@
             <Input type="submit" value="Run Code"/>
         </form>
     </div>
+    <p>Note: This parser ignores lines that don't start with valid commands and assumes that no more code comes after the first 'DEFINE' statement. It is also case-sensative. If you create your code using the game, then you can just paste it in without any changes.</p>
 </body>
