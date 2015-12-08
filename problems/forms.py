@@ -205,7 +205,7 @@ class CodeForm(forms.Form):
             if outbox == test.outbox.split():
                 total_steps += steps
                 continue
-            raise forms.ValidationError("Solution produced wrong output. INBOX: {} OUTBOX: {}".format(test.inbox,outbox))
+            raise forms.ValidationError("Solution produced wrong output. INBOX: {} OUTBOX: {} MEMORY: {}".format(test.inbox,outbox,memory))
 
         # code has passed all cases
         self.cleaned_data['speed'] = int(total_steps/len(tests))
