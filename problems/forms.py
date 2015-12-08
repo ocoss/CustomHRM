@@ -123,7 +123,7 @@ class CodeForm(forms.Form):
                         else:
                             j = int(line[1])
                         if memory[j] == '*':
-                            raise forms.ValidationError("Code Crashed: Cannot copy nothing. INBOX: {}".format(test.inbox))
+                            raise forms.ValidationError("Code Crashed: Cannot copy nothing. INBOX: {} MEMORY: {}".format(test.inbox,memory))
                         hands = memory[j]
 
                     elif line[0] == 'BUMPUP':
