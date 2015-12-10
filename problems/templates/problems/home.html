@@ -1,28 +1,24 @@
-<html lang="en">
-<head>
-<style type="text/css">
-    body {
-        background-color: #EFDFCE;
-    }
+{% extends "problems/base.html" %}
+
+{% block title %}
+CustomHRM
+{% endblock %}
+
+{% block style %}
     h1 {
         font-size:80px;
-        margin: auto;
         width:36%;
-    }
-    p {
-        font-size:17px;
-        font-family:"Arial";
-    }
-</style>
-</head>
-<body>
+        }
+{% endblock %}
+
+{%block body %}
     <h1>Custom <a style="outline:none;" href="http://tomorrowcorporation.com/humanresourcemachine"><img style="padding-top:20px;" src="http://tomorrowcorporation.com/blog/wp-content/themes/tcTheme2/images/HumanResourceMachineNavIcon.png"></img></a></h1>
     <br>
     <p>This site hosts custom problems for the game <a href="http://tomorrowcorporation.com/humanresourcemachine">Human Resource Machine</a>, and keeps track of high scores. To get started just select a problem from the list below!</p>
     
-    <div style="padding-left:20px;">
+    <div class="padded">
         <h2>Problems:</h2>
-        <table style="padding-left:20px;">
+        <table class="padded">
             {% for prob in problems %}
             <tr>
                 <td><p><a href="{% url 'problem' prob.name_slug %}">{{ prob }}</a></p></td>
@@ -32,4 +28,4 @@
             {% endfor %}
         </table>
     </div> 
-</body>
+{% endblock %}

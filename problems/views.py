@@ -38,6 +38,7 @@ class ProblemView(generic.TemplateView):
             context['user_name'] = user_name
             context['code'] = code_form.cleaned_data['code']
             context['size'] = size
+            context['full_size'] = len(context['code'].splitlines()) + 1
             context['speed'] = speed
 
             # check if it is a high score

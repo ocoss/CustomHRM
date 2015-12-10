@@ -1,27 +1,18 @@
-<html lang="en">
-<head>
-<style type="text/css">
-    body {
-        background-color: #EFDFCE;
-    }
-    h1 {
-        font-size:50px;
-        margin: auto;
-        width:50%;
-    }
+{% extends "problems/base.html" %}
+
+{% block title %}
+{{ problem }}
+{% endblock %}
+
+{% block style %}
     h2 {
-        font-size: 30px;
         margin: auto;
         width: 50%;
     }
-    p {
-        font-size:16px;
-        font-family:"Arial";
-    }
-</style>
-</head>
-<body>
-    <p><a href="/">home</a></p>
+{% endblock %}
+
+{%block body %}
+    <p><a href="{% url 'home' %}">Home</a></p>
     <h1>{{ problem }}</h1>
     <h2>{{ problem.difficulty }}</h2>
     <div>
@@ -37,7 +28,7 @@
         {% endif %}
     </div>
     <h3>Description:</h3>
-    <div style="padding-left:20px;">
+    <div class="padded">
         {% autoescape off %}
         <p>{{ problem.description }}</p>
         {% endautoescape %}
@@ -48,11 +39,25 @@
         <h3>Code Input:</h3>
         <form action="{% url 'problem' problem.name_slug %}" method="post">
             {% csrf_token %}
-            <ul>
-                {{ form.as_ul }}
-            </ul>
+            {% for field in form %}
+                <div>
+                    {% if field.is_hidden %}
+                        {{ field }}
+                    {% else %}
+                        {% for error in field.errors %}
+                            {% autoescape off %}                    
+                            <p class="error">{{ error }}</p>
+                            {% endautoescape %}
+                        {% endfor %}
+                        {{ field.label_tag }} {{ field }}
+                        {% if field.help_text %}
+                            <p>{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            {% endfor %}
             <Input type="submit" value="Run Code"/>
         </form>
     </div>
     <p>Note: This parser ignores lines that don't start with valid commands and assumes that no more code comes after the first 'DEFINE' statement. It is also case-sensitive. If you create your code using the game, then you can just paste it in without any changes.</p>
-</body>
+{% endblock %}

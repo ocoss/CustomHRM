@@ -1,27 +1,18 @@
-<html lang="en">
-<head>
-<style type="text/css">
-    body {
-        background-color: #EFDFCE;
-    }
-    h1 {
-        font-size:50px;
-        margin: auto;
-        width:50%;
-    }
+{% extends "problems/base.html" %}
+
+{% block title %}
+{{ problem }}
+{% endblock %}
+
+{% block style %}
     h2 {
-        font-size: 30px;
         margin: auto;
         width: 50%;
     }
-    p {
-        font-size:16px;
-        font-family:"Arial";
-    }
-</style>
-</head>
-<body>
-    <p><a href="/">home</a></p>
+{% endblock %}
+
+{%block body %}
+    <p><a href="{% url 'home' %}">Home</a></p>
     <h1>{{ problem }} Solution</h1>
     <h2>{{ problem.difficulty }}</h2>
     <div>
@@ -33,12 +24,12 @@
         </ul>
     </div>
     <h3>Your score:</h3>
-    <p style="padding-left:20px;">{{ size }}/{{ speed }}</p>
+    <p class="padded">{{ size }}/{{ speed }}</p>
     {% if high_score %}
     <h4>Congratulations! High Score!</h4>
     {% endif %}
     <h3>Your code:</h3>
-    <div style="padding-left:20px;">
-        <textarea cols="40" rows="25">{{ code }}</textarea>
+    <div class="padded">
+        <textarea cols="40" rows="{{ full_size }}">{{ code }}</textarea>
     </div>
-</body>
+{% endblock %}
